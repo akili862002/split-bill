@@ -44,6 +44,7 @@ export const createBillAction = actionClient
     });
 
     revalidatePath(paths.project(input.projectId));
+    revalidatePath("/");
 
     return bill;
   });
@@ -115,6 +116,7 @@ export const updateBillAction = actionClient
       }
 
       revalidatePath(paths.project(input.projectId));
+      revalidatePath("/");
 
       return bill;
     });
@@ -136,6 +138,7 @@ export const deleteBillAction = actionClient
     console.log("DELETE:", bill);
 
     revalidatePath(paths.project(bill.projectId));
+    revalidatePath("/");
 
     return bill;
   });

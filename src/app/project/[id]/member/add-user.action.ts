@@ -38,6 +38,7 @@ export const createUserAction = actionClient
     });
 
     revalidatePath(paths.project(projectId));
+    revalidatePath("/");
 
     return user;
   });
