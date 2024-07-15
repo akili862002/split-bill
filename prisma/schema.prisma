@@ -14,12 +14,14 @@ datasource db {
 }
 
 model Project {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  fromDate  DateTime
-  toDate    DateTime
-  createdAt DateTime @default(now())
-  User      User[]
+  fromDate  DateTime?
+  toDate    DateTime?
+  createdAt DateTime  @default(now())
+
+  users User[]
+  bills Bill[]
 }
 
 model User {
@@ -27,6 +29,7 @@ model User {
   fullName String
   email    String?
   phone    String?
+  avatar   String?
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
@@ -44,21 +47,25 @@ model BankAccount {
 }
 
 model Bill {
-  id        String @id @default(uuid())
-  projectId String
-
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
   name        String
   description String?
-  issueAt     DateTime     @default(now())
-  BillMember  BillMember[]
+  issueAt     DateTime @default(now())
+
+  members BillMember[]
 }
 
 model BillMember {
-  id     String @id @default(uuid())
-  billId String
-  bill   Bill   @relation(fields: [billId], references: [id])
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  id       String  @id @default(uuid())
+  billId   String
+  bill     Bill    @relation(fields: [billId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+  isPayer  Boolean
+  isCustom Boolean
+
   amount Int
 
   @@unique([billId, userId])
