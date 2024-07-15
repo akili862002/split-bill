@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  name      String
+  fromDate  DateTime
+  toDate    DateTime
+  createdAt DateTime @default(now())
+  User      User[]
+}
+
+model User {
+  id       String  @id @default(uuid())
+  fullName String
+  email    String?
+  phone    String?
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  BankAccount BankAccount[]
+  BillMember  BillMember[]
+}
+
+model BankAccount {
+  id       String  @id @default(uuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+  bankName String?
+  qrCode   String?
+}
+
+model Bill {
+  id        String @id @default(uuid())
+  projectId String
+
+  name        String
+  description String?
+  issueAt     DateTime     @default(now())
+  BillMember  BillMember[]
+}
+
+model BillMember {
+  id     String @id @default(uuid())
+  billId String
+  bill   Bill   @relation(fields: [billId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  amount Int
+
+  @@unique([billId, userId])
+}
