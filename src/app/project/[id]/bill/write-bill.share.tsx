@@ -255,11 +255,7 @@ export function WriteBillPage({
                         Lưu hóa đơn
                       </Button>
                       {editBill && (
-                        <Button
-                          loading={loading}
-                          variant="outline"
-                          onClick={handleDelete}
-                        >
+                        <Button variant="outline" onClick={handleDelete}>
                           Xóa bill
                         </Button>
                       )}
