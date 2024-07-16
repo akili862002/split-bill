@@ -2,9 +2,9 @@ import { Avatars } from "@/components/Avatars";
 import { Page, PageGrid, PageSection } from "@/layouts/Page";
 import prisma from "@/lib/prisma";
 import { cn } from "@/utils/cn.util";
+import { prettyDate } from "@/utils/date.util";
 import { paths } from "@/utils/paths.util";
 import { toPrice } from "@/utils/price.util";
-import dayjs from "dayjs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment } from "react";
@@ -64,10 +64,8 @@ export default async function ProjectPage({ params }) {
 
                   const isDifferentDay =
                     index > 0 &&
-                    dayjs(bill.issueAt).format("DD MMM YYYY") !==
-                      dayjs(project.bills[index - 1].issueAt).format(
-                        "DD MMM YYYY"
-                      );
+                    prettyDate(bill.issueAt) !==
+                      prettyDate(project.bills[index - 1].issueAt);
 
                   return (
                     <Fragment key={bill.id}>
@@ -78,7 +76,7 @@ export default async function ProjectPage({ params }) {
                             isDifferentDay && "!mt-6"
                           )}
                         >
-                          {dayjs(bill.issueAt).format("DD MMM YYYY")}
+                          {prettyDate(bill.issueAt)}
                         </div>
                       )}
                       <Link
@@ -89,9 +87,7 @@ export default async function ProjectPage({ params }) {
                           <div className="flex w-full">
                             <div className="flex-1">
                               <h4 className="font-semibold">{bill.name}</h4>
-                              <div>
-                                {dayjs(bill.issueAt).format("DD MMM YYYY")}
-                              </div>
+                              <div>{prettyDate(bill.issueAt)}</div>
                             </div>
                             <div className="flex-shrink-0">
                               <span className="font-semibold text-xl">
