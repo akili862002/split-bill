@@ -11,8 +11,16 @@ export default async function ({ params }) {
       users: true,
     },
   });
+  const bills = await prisma.bill.findMany({
+    include: {
+      members: true,
+    },
+    orderBy: {
+      issueAt: "desc",
+    },
+  });
 
   if (!project) return notFound();
 
-  return <PayPage users={project.users} project={project} />;
+  return <PayPage users={project.users} project={project} bills={bills} />;
 }

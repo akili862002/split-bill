@@ -166,8 +166,10 @@ Page.SectionBlock = ({
   title,
   children,
   actions,
+  className,
 }: PropsWithChildren<{
   title: string;
+  className?: string;
   actions?: {
     content: string;
     url?: string;
@@ -175,7 +177,7 @@ Page.SectionBlock = ({
   }[];
 }>) => {
   return (
-    <div className="mt-2 first:mt-0">
+    <div className={cn("mt-2 first:mt-0", className)}>
       <div className="flex justify-between">
         <h5 className="font-semibold">{title}</h5>
         <div className="flex gap-3">

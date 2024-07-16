@@ -129,13 +129,11 @@ export const deleteBillAction = actionClient
     })
   )
   .action(async ({ parsedInput: { id } }) => {
-    console.log(id);
     const bill = await prisma.bill.delete({
       where: {
         id,
       },
     });
-    console.log("DELETE:", bill);
 
     revalidatePath(paths.project(bill.projectId));
     revalidatePath("/");
