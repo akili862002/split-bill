@@ -217,7 +217,12 @@ Page.Grid = ({
   right: ReactNode;
 }) => {
   return (
-    <div className={cn("grid grid-cols-[2fr,1fr] gap-4 w-full", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-4 w-full",
+        className
+      )}
+    >
       <div className="space-y-4">{left}</div>
       <div className="space-y-4">{right}</div>
     </div>

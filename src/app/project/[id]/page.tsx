@@ -37,7 +37,7 @@ export default async function ProjectPage({ params }) {
       size="md"
       backLink="/"
       primaryAction={{
-        content: "Chia tiền peer-to-peer",
+        content: "Chia tiền P2P",
         url: paths.pay(params.id),
       }}
     >
@@ -88,8 +88,10 @@ export default async function ProjectPage({ params }) {
                         <li className="py-2 px-4 border rounded-lg bg-neutral-50">
                           <div className="flex w-full">
                             <div className="flex-1">
-                              <h4 className="font-semibold">{bill.name}</h4>
-                              <div>
+                              <h4 className="font-semibold text-base">
+                                {bill.name}
+                              </h4>
+                              <div className="text-neutral-700">
                                 {prettyDate(bill.issueAt, "dddd, DD MMMM")}
                               </div>
                             </div>
