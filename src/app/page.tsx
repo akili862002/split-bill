@@ -2,6 +2,7 @@ import { Avatars } from "@/components/Avatars";
 import { AddLocationIcon } from "@/icons/common.icons";
 import { Page, PageSection } from "@/layouts/Page";
 import prisma from "@/lib/prisma";
+import { prettyDate } from "@/utils/date.util";
 import { paths } from "@/utils/paths.util";
 import { toPrice } from "@/utils/price.util";
 import dayjs from "dayjs";
@@ -46,10 +47,7 @@ export default async function Home() {
           >
             <PageSection
               title={project.name}
-              subtitle={
-                project.fromDate &&
-                dayjs(project.fromDate).format("DD MMM YYYY")
-              }
+              subtitle={project.fromDate && prettyDate(project.fromDate)}
             >
               <div className="flex justify-between w-full items-end">
                 <div>

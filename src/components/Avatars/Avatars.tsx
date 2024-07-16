@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "@prisma/client";
+import { CSSProperties } from "react";
 import { Tooltip } from "react-tooltip";
 
 interface IAvatarsProps {
@@ -28,5 +29,26 @@ export const Avatars: React.FC<IAvatarsProps> = ({ users }) => {
         <Tooltip id="user" />
       </div>
     </>
+  );
+};
+
+export const Avatar = ({
+  user,
+  style,
+  tooltip,
+}: {
+  user: User;
+  tooltip?: string;
+  style?: CSSProperties;
+}) => {
+  return (
+    <img
+      src={user.avatar}
+      alt={user.fullName}
+      className="rounded-full w-8 h-8  flex-shrink-0 bg-neutral-100 object-cover"
+      style={style}
+      data-tooltip-id="user"
+      data-tooltip-content={tooltip || user.fullName}
+    />
   );
 };

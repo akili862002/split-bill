@@ -1,4 +1,4 @@
-import { Avatars } from "@/components/Avatars";
+import { Avatar, Avatars } from "@/components/Avatars";
 import { Page, PageGrid, PageSection } from "@/layouts/Page";
 import prisma from "@/lib/prisma";
 import { cn } from "@/utils/cn.util";
@@ -67,6 +67,8 @@ export default async function ProjectPage({ params }) {
                     prettyDate(bill.issueAt) !==
                       prettyDate(project.bills[index - 1].issueAt);
 
+                  const payer = bill.members.find((mb) => mb.isPayer).user;
+
                   return (
                     <Fragment key={bill.id}>
                       {(index === 0 || isDifferentDay) && (
@@ -87,7 +89,9 @@ export default async function ProjectPage({ params }) {
                           <div className="flex w-full">
                             <div className="flex-1">
                               <h4 className="font-semibold">{bill.name}</h4>
-                              <div>{prettyDate(bill.issueAt)}</div>
+                              <div>
+                                {prettyDate(bill.issueAt, "dddd, DD MMMM")}
+                              </div>
                             </div>
                             <div className="flex-shrink-0">
                               <span className="font-semibold text-xl">
@@ -95,9 +99,15 @@ export default async function ProjectPage({ params }) {
                               </span>
                             </div>
                           </div>
-                          <div className="mt-2">
+                          <div className="mt-2 flex gap-3">
+                            <Avatar
+                              user={payer}
+                              tooltip={payer.fullName + " (người trả)"}
+                            />
                             <Avatars
-                              users={bill.members.map((mb) => mb.user)}
+                              users={bill.members
+                                .filter((mb) => !mb.isPayer)
+                                .map((mb) => mb.user)}
                             />
                           </div>
                         </li>
