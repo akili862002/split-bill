@@ -1,7 +1,7 @@
 "use client";
 
 import { BaseSelectDefaultStyle } from "@/components/SelectDefaultStyle";
-import { Page, PageSection } from "@/layouts/Page";
+import { Page, PageGrid, PageSection } from "@/layouts/Page";
 import { Bill, BillMember, Project, User } from "@prisma/client";
 import { useMemo, useState } from "react";
 import { toPrice } from "@/utils/price.util";
@@ -9,6 +9,7 @@ import { paths } from "@/utils/paths.util";
 import { SimpleTable } from "@/components/SimpleTable";
 import { prettyDate } from "@/utils/date.util";
 import Link from "next/link";
+import ReactApexChart from "react-apexcharts";
 
 interface IPayPageProps {
   project: Project;
@@ -26,30 +27,40 @@ export const PayPage: React.FC<IPayPageProps> = ({
   const paybackUsers = users.filter((usr) => usr.id !== selected);
 
   return (
-    <Page
-      title="Chia tiền peer-to-peer"
-      size="sm"
-      backLink={paths.project(project.id)}
-    >
-      <PageSection title="Người mượn">
-        <BaseSelectDefaultStyle
-          value={selected}
-          options={users.map((usr) => ({
-            label: usr.fullName,
-            value: usr.id,
-          }))}
-          onChange={setSelected}
-        />
-      </PageSection>
-      {selected &&
-        paybackUsers.map((user) => (
-          <UserToPay
-            borrower={users.find((usr) => usr.id === selected)}
-            lender={user}
-            key={user.id + selected}
-            bills={bills}
-          />
-        ))}
+    <Page title="Chia tiền peer-to-peer" backLink={paths.project(project.id)}>
+      <PageGrid
+        className="md:!grid-cols-[1fr,2fr]"
+        left={
+          <>
+            <PageSection title="">
+              <BaseSelectDefaultStyle
+                label="Tôi là"
+                required
+                value={selected}
+                options={users.map((usr) => ({
+                  label: usr.fullName,
+                  value: usr.id,
+                }))}
+                onChange={setSelected}
+              />
+              {selected && <Analytics userId={selected} bills={bills} />}
+            </PageSection>
+          </>
+        }
+        right={
+          <>
+            {selected &&
+              paybackUsers.map((user) => (
+                <UserToPay
+                  borrower={users.find((usr) => usr.id === selected)}
+                  lender={user}
+                  key={user.id + selected}
+                  bills={bills}
+                />
+              ))}
+          </>
+        }
+      ></PageGrid>
     </Page>
   );
 };
@@ -141,7 +152,7 @@ export const UserToPay: React.FC<{
             <div className="mt-2 w-full flex justify-end">
               <p className="">
                 Tổng cộng:{" "}
-                <span className="text-lg font-semibold">
+                <span className="text-base font-semibold">
                   {toPrice(totalBillYouMustPay)}
                 </span>
               </p>
@@ -175,7 +186,7 @@ export const UserToPay: React.FC<{
             <div className="mt-2 w-full flex justify-end">
               <p className="">
                 Tổng cộng:{" "}
-                <span className="text-lg font-semibold">
+                <span className="text-base font-semibold">
                   {toPrice(totalBillHeMustPay)}
                 </span>
               </p>
@@ -183,10 +194,10 @@ export const UserToPay: React.FC<{
           </div>
         )}
       </Page.SectionBlock>
-      <div className="border-t px-4 pt-2 flex justify-end w-full items-end gap-2 ">
+      <div className="border-t px-4 pt-4 pb-2 !mt-0 flex justify-end w-full items-end gap-2 ">
         {final > 0 ? (
           <>
-            <span className="text-base">Bạn phải trả</span>
+            <span className="text-base">Bạn phải trả {lender.fullName}</span>
             <div className="font-bold text-3xl">{toPrice(final)}</div>
           </>
         ) : (
@@ -199,4 +210,78 @@ export const UserToPay: React.FC<{
       </div>
     </PageSection>
   );
+};
+
+const Analytics: React.FC<{
+  bills: (Bill & { members: BillMember[] })[];
+  userId: string;
+}> = ({ bills, userId }) => {
+  const billMembers = bills
+    .flatMap((bill) => bill.members.map((mb) => ({ ...mb, bill })))
+    .filter((mb) => mb.userId === userId);
+
+  const totalExpense = billMembers.reduce((acc, curr) => acc + curr.amount, 0);
+
+  const series = billMembers.map((mb: any) => mb.amount);
+  const labels = billMembers.map((mb: any) => mb.bill.name);
+  chartOptions.labels = labels;
+
+  return (
+    <Page.SectionBlock title="Thống kê chi tiêu">
+      <div className="grid grid-cols-2 gap-y-1">
+        <div>Chi tiêu:</div>
+        <div>
+          <div className="font-semibold">{toPrice(totalExpense)}</div>
+        </div>
+        <div>Số hóa đơn:</div>
+        <div className="font-semibold">{billMembers.length}</div>
+      </div>
+      <div>
+        <ReactApexChart
+          options={chartOptions}
+          series={series}
+          type="polarArea"
+          width={380}
+        />
+      </div>
+    </Page.SectionBlock>
+  );
+};
+
+const chartOptions: ApexCharts.ApexOptions = {
+  chart: {
+    width: 380,
+    type: "polarArea",
+  },
+  yaxis: {
+    show: false,
+  },
+  legend: {
+    // show: false,
+    position: "bottom",
+  },
+  tooltip: {},
+  stroke: {
+    colors: ["#fff"],
+  },
+  fill: {
+    opacity: 0.8,
+  },
+  plotOptions: {
+    polarArea: {
+      rings: {
+        strokeWidth: 0,
+      },
+      spokes: {
+        strokeWidth: 0,
+      },
+    },
+  },
+  // theme: {
+  //   monochrome: {
+  //     enabled: true,
+  //     shadeTo: "light",
+  //     shadeIntensity: 0.6,
+  //   },
+  // },
 };

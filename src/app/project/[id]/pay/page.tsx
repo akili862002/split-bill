@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { PayPage } from "./pay";
+import { PayPage } from "./pay.share";
 
 export default async function ({ params }) {
   const project = await prisma.project.findUnique({
