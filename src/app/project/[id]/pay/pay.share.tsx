@@ -237,6 +237,8 @@ const Analytics: React.FC<{
       })
   );
 
+  const totalChargeBack = totalBillsPaid - totalExpense;
+
   const series = billMembers.map((mb: any) => mb.amount);
   const labels = billMembers.map((mb: any) => mb.bill.name);
   chartOptions.labels = labels;
@@ -250,6 +252,10 @@ const Analytics: React.FC<{
         </div>
         <div>Tổng tiền trả trước:</div>
         <div className="font-semibold">{toPrice(totalBillsPaid)}</div>
+        <div>Tổng tiền được hoàn:</div>
+        <div className="font-semibold">
+          {totalChargeBack > 0 ? toPrice(totalBillsPaid - totalExpense) : "0"}
+        </div>
         <div>Số hóa đơn:</div>
         <div className="font-semibold">{billMembers.length}</div>
       </div>
