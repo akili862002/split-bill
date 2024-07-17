@@ -43,7 +43,9 @@ export const PayPage: React.FC<IPayPageProps> = ({
                 }))}
                 onChange={setSelected}
               />
-              {selected && <Analytics userId={selected} bills={bills} />}
+              {selected && (
+                <Analytics key={selected} userId={selected} bills={bills} />
+              )}
             </PageSection>
           </>
         }
