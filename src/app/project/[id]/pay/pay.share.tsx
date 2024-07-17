@@ -10,6 +10,7 @@ import { SimpleTable } from "@/components/SimpleTable";
 import { prettyDate } from "@/utils/date.util";
 import Link from "next/link";
 import ReactApexChart from "react-apexcharts";
+import { sum } from "@/utils/sum.util";
 
 interface IPayPageProps {
   project: Project;
@@ -224,6 +225,18 @@ const Analytics: React.FC<{
 
   const totalExpense = billMembers.reduce((acc, curr) => acc + curr.amount, 0);
 
+  const totalBillsPaid = sum(
+    bills
+      .filter((bill) => {
+        const member = bill.members.find((mb) => mb.userId === userId);
+        return member && member.isPayer;
+      })
+      .map((b) => {
+        const totalBill = sum(b.members.map((mb) => mb.amount));
+        return totalBill;
+      })
+  );
+
   const series = billMembers.map((mb: any) => mb.amount);
   const labels = billMembers.map((mb: any) => mb.bill.name);
   chartOptions.labels = labels;
@@ -235,10 +248,12 @@ const Analytics: React.FC<{
         <div>
           <div className="font-semibold">{toPrice(totalExpense)}</div>
         </div>
+        <div>Tổng tiền trả trước:</div>
+        <div className="font-semibold">{toPrice(totalBillsPaid)}</div>
         <div>Số hóa đơn:</div>
         <div className="font-semibold">{billMembers.length}</div>
       </div>
-      <div>
+      <div className="flex w-full items-center justify-center pt-6">
         <ReactApexChart
           options={chartOptions}
           series={series}
