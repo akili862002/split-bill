@@ -240,7 +240,7 @@ const Analytics: React.FC<{
         <ReactApexChart
           options={chartOptions}
           series={series}
-          type="polarArea"
+          type="pie"
           width={380}
         />
       </div>
@@ -250,8 +250,7 @@ const Analytics: React.FC<{
 
 const chartOptions: ApexCharts.ApexOptions = {
   chart: {
-    width: 380,
-    type: "polarArea",
+    height: 380,
   },
   yaxis: {
     show: false,
