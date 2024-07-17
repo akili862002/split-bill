@@ -257,8 +257,8 @@ const chartOptions: ApexCharts.ApexOptions = {
     show: false,
   },
   legend: {
-    // show: false,
-    position: "bottom",
+    show: false,
+    // position: "bottom",
   },
   tooltip: {},
   stroke: {
