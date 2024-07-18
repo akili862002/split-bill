@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { createUserAction } from "./add-user.action";
 import { usePRouter } from "@/hooks/usePRouter.hook";
 import { paths } from "@/utils/paths.util";
-import { revalidatePath } from "next/cache";
 
 export default function AddUserPage({ params }) {
   const [initValues] = useState({

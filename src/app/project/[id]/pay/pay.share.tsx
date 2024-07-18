@@ -221,7 +221,8 @@ const Analytics: React.FC<{
 }> = ({ bills, userId }) => {
   const billMembers = bills
     .flatMap((bill) => bill.members.map((mb) => ({ ...mb, bill })))
-    .filter((mb) => mb.userId === userId);
+    .filter((mb) => mb.userId === userId)
+    .sort((a, b) => b.amount - a.amount);
 
   const totalExpense = billMembers.reduce((acc, curr) => acc + curr.amount, 0);
 
