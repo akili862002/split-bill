@@ -246,19 +246,17 @@ const Analytics: React.FC<{
 
   return (
     <Page.SectionBlock title="Thống kê chi tiêu">
-      <div className="grid grid-cols-2 gap-y-1">
-        <div>Chi tiêu:</div>
+      <div className="grid grid-cols-[auto,1fr] gap-4 gap-y-1">
+        <div>Chi tiêu của bạn:</div>
         <div>
           <div className="font-semibold">{toPrice(totalExpense)}</div>
         </div>
-        <div>Tổng tiền trả trước:</div>
+        <div>Tổng bill bạn trả:</div>
         <div className="font-semibold">{toPrice(totalBillsPaid)}</div>
-        <div>Tổng tiền được hoàn:</div>
+        <div>Bạn được hoàn lại:</div>
         <div className="font-semibold">
           {totalChargeBack > 0 ? toPrice(totalBillsPaid - totalExpense) : "0"}
         </div>
-        <div>Số hóa đơn:</div>
-        <div className="font-semibold">{billMembers.length}</div>
       </div>
       <div className="flex w-full items-center justify-center pt-6">
         <ReactApexChart
@@ -285,7 +283,8 @@ const chartOptions: ApexCharts.ApexOptions = {
   },
   tooltip: {},
   stroke: {
-    colors: ["#fff"],
+    show: false,
+    // colors: ["#fff"],
   },
   fill: {
     opacity: 0.8,
