@@ -5,11 +5,15 @@ import prisma from "@/lib/prisma";
 import { prettyDate } from "@/utils/date.util";
 import { paths } from "@/utils/paths.util";
 import { toPrice } from "@/utils/price.util";
+import { auth } from "@clerk/nextjs/server";
 import dayjs from "dayjs";
 import Link from "next/link";
 dayjs.locale("vi");
 
 export default async function Home() {
+  const { userId } = auth();
+  console.log({ userId });
+
   const projects = await prisma.project.findMany({
     orderBy: { createdAt: "desc" },
     include: {

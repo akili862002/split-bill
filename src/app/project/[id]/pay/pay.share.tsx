@@ -107,7 +107,7 @@ export const UserToPay: React.FC<{
       if (you && he && you.isPayer && !he.isPayer) {
         billsHeMustPayBack.push({
           payer: borrower,
-          you,
+          you: he,
           bill,
         });
       }
